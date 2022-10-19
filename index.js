@@ -1,5 +1,6 @@
 import path from "path";
 import * as dotenv from 'dotenv';
+import cors from 'cors';
 import { fileURLToPath } from 'url';
 import express from 'express';
 import mongoose from "mongoose";
@@ -43,6 +44,7 @@ const upload = multer({
 });
 
 app.use(express.json());
+app.use(cors());
 app.use('/uploads', express.static('uploads'));
 
 app.get('/', (req, res) => {
@@ -54,6 +56,7 @@ app.post('/signup', authValidation, handleValidationErrors, UserController.signu
 app.get('/me', checkAuth, UserController.getMe);
 
 app.get('/posts', PostController.getAll);
+app.get('/posts/tags', PostController.getLastTags);
 app.get('/posts/:id', PostController.getOne);
 app.post('/posts', checkAuth, postCreateValidation, handleValidationErrors, PostController.create);
 app.delete('/posts/:id', checkAuth, PostController.remove);

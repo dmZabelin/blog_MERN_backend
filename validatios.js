@@ -15,6 +15,6 @@ export const authValidation = [
 export const postCreateValidation = [
     body('title', 'Enter article title.').isLength({min: 3}).isString(),
     body('text', 'Enter article text.').isLength({min: 10}).isString(),
-    body('tags', 'Wrong tag format (specify array).').optional().isString(),
+    body('tags', 'Wrong tag format (specify array).').optional().isArray(),
     body('imageUrl', 'No valid image link.').optional().isString(),
 ];
