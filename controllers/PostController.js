@@ -48,7 +48,7 @@ export const getOne = async (req, res) => {
             }
 
             res.json(doc);
-         });
+         }).populate('user');
     } catch (err) {
         console.log(err);
         res.status(500).json({ message: "Failed to get posts." })
@@ -110,6 +110,9 @@ export const update = async (req, res) => {
         }, {
             title: req.body.title,
             text: req.body.text,
+            tags: req.body.tags,
+            imageUrl: req.body.imageUrl,
+            user: req.userId,
         }, (err, doc) => {
             if(err) {
                 console.log(err)
