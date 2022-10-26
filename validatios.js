@@ -9,7 +9,14 @@ export const authValidation = [
     body('fullName', 'Enter your name.').isLength({min: 3}),
     body('email', 'Invalid e-mail format.').isEmail(),
     body('password', 'Password must be at least 5 characters.').isLength({min: 5}),
-    body('avatarUrl', 'No valid avatar link.').optional().isURL(),
+    body('avatarUrl', 'No valid avatar link.').optional().isString(),
+];
+
+export const authEditValidation = [
+    body('fullName', 'Enter your name.').isLength({min: 3}),
+    body('email', 'Invalid e-mail format.').isEmail(),
+    body('password', 'Password must be at least 5 characters.').optional().isLength({min: 5}),
+    body('avatarUrl', 'No valid avatar link.').optional().isString(),
 ];
 
 export const postCreateValidation = [

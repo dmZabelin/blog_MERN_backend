@@ -5,7 +5,10 @@ import { fileURLToPath } from 'url';
 import express from 'express';
 import mongoose from "mongoose";
 import multer from "multer";
-import { authValidation, loginValidation, postCreateValidation } from "./validatios.js";
+import {authEditValidation, authValidation, loginValidation, postCreateValidation} from "./validatios.js";
+
+//import sizeOf from 'image-size';
+//import * as fs from "fs";
 
 import { UserController, PostController } from './controllers/index.js';
 import { handleValidationErrors, checkAuth } from "./utils/index.js";
@@ -53,6 +56,7 @@ app.get('/', (req, res) => {
 
 app.post('/login', loginValidation, handleValidationErrors, UserController.login);
 app.post('/signup', authValidation, handleValidationErrors, UserController.signup);
+app.patch('/edit-profile', authEditValidation, handleValidationErrors, UserController.userDataEdit);
 app.get('/me', checkAuth, UserController.getMe);
 
 app.get('/posts', PostController.getAll);
@@ -70,6 +74,13 @@ app.post('/upload', checkAuth, upload.single('image'), async (req, res) => {
             message: "File must be image."
         })
     }
+    /*const dimensions = sizeOf(req.file.path)
+    if(dimensions.width > 250 || dimensions.height > 250) {
+        fs.unlinkSync(req.file.path);
+        return res.status(404).json({
+            message: "File size must be 250 x 250."
+        })
+    }*/
     res.json({
         url: `/uploads/${req.file.originalname}`,
     })
