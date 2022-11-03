@@ -92,6 +92,50 @@ export const userDataEdit = async (req, res) => {
     }
 }
 
+export const passwordEdit = async (req, res) => {
+    try {
+        const {newPassword, confirmedPassword, oldPassword} = req.body;
+        if(newPassword !== confirmedPassword) {
+            return res.status(404).json({ message: "Failed to update password" });
+        }
+
+        const id = jwt.verify(req.headers.authorization, 'secret_user' ,{ algorithm: 'HS256' }, function(err, decoded) {
+            if (err) {
+                console.log(err);
+                return res.status(404).json({message: "Failed to update password."})
+            }
+            return decoded._id;
+        });
+
+        const user = await UserModel.findOne({_id: id});
+
+        if(!user) {
+            return res.status(404).json({message: "Failed to update password."})
+        }
+
+        const isValidPass = await bcrypt.compare(oldPassword, user._doc.passwordHash);
+
+        if(!isValidPass) {
+            return res.status(404).json({
+                message: 'Password Wrong.'
+            })
+        }
+
+        const salt = await bcrypt.genSalt(10);
+        const hash = await bcrypt.hash(newPassword, salt)
+
+        await UserModel.updateOne({_id: id},{
+            passwordHash: hash
+        });
+
+        res.json({message: 'success'});
+
+    } catch (err) {
+        // console.log(err);
+        res.status(500).json({message: "Failed to update password."})
+    }
+}
+
 export const getMe = async (req, res) => {
     try {
         const user = await UserModel.findById(req.userId);

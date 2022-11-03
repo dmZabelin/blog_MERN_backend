@@ -5,13 +5,23 @@ import { fileURLToPath } from 'url';
 import express from 'express';
 import mongoose from "mongoose";
 import multer from "multer";
-import {authEditValidation, authValidation, loginValidation, postCreateValidation} from "./validatios.js";
+import {
+    authEditValidation,
+    authValidation,
+    loginValidation,
+    passwordEditValidation,
+    postCreateValidation
+} from "./validatios.js";
+import jwt from "jsonwebtoken";
 
 //import sizeOf from 'image-size';
 //import * as fs from "fs";
 
 import { UserController, PostController } from './controllers/index.js';
 import { handleValidationErrors, checkAuth } from "./utils/index.js";
+import UserModel from "./models/User.js";
+import bcrypt from "bcrypt";
+import {passwordEdit} from "./controllers/UserController.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -57,6 +67,7 @@ app.get('/', (req, res) => {
 app.post('/login', loginValidation, handleValidationErrors, UserController.login);
 app.post('/signup', authValidation, handleValidationErrors, UserController.signup);
 app.patch('/edit-profile', authEditValidation, handleValidationErrors, UserController.userDataEdit);
+app.patch('/edit-pw', passwordEditValidation, handleValidationErrors, UserController.passwordEdit );
 app.get('/me', checkAuth, UserController.getMe);
 
 app.get('/posts', PostController.getAll);

@@ -19,6 +19,12 @@ export const authEditValidation = [
     body('avatarUrl', 'No valid avatar link.').optional().isString(),
 ];
 
+export const passwordEditValidation = [
+    body('oldPassword', 'Password must be at least 5 characters.').isLength({min: 5}),
+    body('newPassword', 'Password must be at least 5 characters.').isLength({min: 5}),
+    body('confirmedPassword', 'Password must be at least 5 characters.').isLength({min: 5}),
+];
+
 export const postCreateValidation = [
     body('title', 'Enter article title.').isLength({min: 3}).isString(),
     body('text', 'Enter article text.').isLength({min: 10}).isString(),
